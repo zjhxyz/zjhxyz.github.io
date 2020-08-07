@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>安装傲腾Optane内存加速过程的各种问题解决 | Heerozh&#39;s Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://zjhxyz.github.io/favicon.ico?v=1596770989676">
+<link rel="stylesheet" href="https://zjhxyz.github.io/styles/main.css">
+
+
+  <link rel="stylesheet"
+  href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/hopscotch.min.css">
+
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  
+
+  
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-160783603-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-160783603-1');
+</script>
+
+
+    <meta name="description" content="买了个傲腾给游戏盘加速想试试，遇到了不少问题（坑）记录下。
+
+1.需要末尾5MB的“未分配”空间
+首先安装这东西要求系统盘末尾保留5MB的“未分配”空间，一般来说你右键点你最后一个磁盘卷，选压缩，输入5MB，就会留给你。
+但我的win10安..." />
+    <meta name="keywords" content="日常" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://zjhxyz.github.io">
+        <img src="https://zjhxyz.github.io/images/avatar.png?v=1596770989676" class="site-logo">
+        <h1 class="site-title">Heerozh&#39;s Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            Homepange
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            Archives
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            About me
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      <a class="social-link" href="https://zjhxyz.github.io/atom.xml" target="_blank"><i class="fas fa-rss"></i></a>
+      
+        
+          <a class="social-link" href="https://github.com/Heerozh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://www.weibo.com/mocilol" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      
+    </div>
+    <div class="site-footer">
+      
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">安装傲腾Optane内存加速过程的各种问题解决</h2>
+            <div class="post-info">2020-03-15</div>
+            <!-- 
+              <div class="feature-container" style="background-image: url('https://zjhxyz.github.io/post-images/an-zhuang-ao-teng-optane-nei-cun-jia-su-guo-cheng-de-ge-chong-wen-ti-jie-jue.jpg')">
+              </div>
+             -->
+            <div class="post-content" v-pre>
+              <p>买了个傲腾给游戏盘加速想试试，遇到了不少问题（坑）记录下。</p>
+<!-- more -->
+<h2 id="1需要末尾5mb的未分配空间">1.需要末尾5MB的“未分配”空间</h2>
+<p>首先安装这东西要求系统盘末尾保留5MB的“未分配”空间，一般来说你右键点你最后一个磁盘卷，选压缩，输入5MB，就会留给你。</p>
+<p>但我的win10安装时会在末尾留个不能动的oem空间，如图：</p>
+<figure data-type="image" tabindex="1"><img src="https://zjhxyz.github.io/post-images/1584367097868.png" alt="img" loading="lazy"></figure>
+<p>如果你希望给系统盘加速，那么你要想办法删除那个空间了，不知是否会有问题。</p>
+<p>好在我给我要加速的游戏盘压缩个5MB空间就可以通过这步。</p>
+<h2 id="2需切换sata到raid模式造成启动无限转圈">2.需切换SATA到RAID模式，造成启动无限转圈</h2>
+<p>如果你本来开的是AHCI模式，那么安装程序会改成RAID模式，然后你系统就无法启动了。</p>
+<p>我尝试了以前改AHCI的办法企图通过这步，就是进入一次安全模式即可：</p>
+<ol>
+<li>
+<p>改回AHCI</p>
+</li>
+<li>
+<p>启动系统，msconfig选安全引导：最小，重启</p>
+</li>
+<li>
+<p>进入系统前BIOS改RIAD(我的叫Intel RST premium)</p>
+</li>
+<li>
+<p>进入系统安全模式，并改回正常启动即可</p>
+</li>
+</ol>
+<p>我以为这样可以解决进入系统的问题，没想到win10有个大坑：</p>
+<h3 id="用微软账号并用pin码登陆win10的千万别随便进安全模式">用微软账号并用PIN码登陆Win10的，千万别随便进安全模式！！！</h3>
+<p>为什么？</p>
+<blockquote>
+<p>因为安全模式不支持Pin码登陆。</p>
+</blockquote>
+<p>那么用微软账号的密码登陆？</p>
+<blockquote>
+<p>是的，但我账号是随机生成的密码，且定期更新。</p>
+</blockquote>
+<p>你忘记密码了！</p>
+<blockquote>
+<p>不，因为一直Pin登陆，所以他不知道我改密码了，还是老的随机密码且不知道是哪一次的。如果有网络可以通过网络让他更新密码。</p>
+</blockquote>
+<p>那就让它更新啊？</p>
+<blockquote>
+<p>见证奇迹的时刻到了，最小安全引导没有网络.....</p>
+</blockquote>
+<p>....</p>
+<p>...</p>
+<p>死循环</p>
+<p><strong>解决办法：</strong><br>
+启动PE，用PE的UEFI修复工具加载引导区，一般会加载到Z:\</p>
+<p>然后bcdedit /store Z:\efi\Microsoft\boot\BCD /deletevalue {defualt} safeboot</p>
+<figure data-type="image" tabindex="2"><img src="https://zjhxyz.github.io/post-images/an-zhuang-ao-teng-optane-nei-cun-jia-su-guo-cheng-de-ge-chong-wen-ti-jie-jue.jpg" alt="" loading="lazy"></figure>
+<hr>
+<p>接下来我们还要解决AHCI转RAID的问题，我因为要加速的是副盘，我的做法是BIOS里，把我的主盘M2_1的RAID设为关闭即可。就在改RAID地方的下面。</p>
+<h1 id="启动傲腾显示0xa008002e版本太旧或者找不到驱动程序的提示">启动傲腾显示0xA008002E，版本太旧或者找不到驱动程序的提示</h1>
+<p>是驱动不对，这个提示很不友好，没告诉具体哪个。且官网上还说如果你是从微软商城安装的傲腾和储存管理套件，不需要另外安装驱动，然而他瞎说的，你还是要安装。</p>
+<p><strong>解决办法：</strong><br>
+在官网，SetupOptaneMemory.exe的下面，下载f6flpy-x64.zip，右键iaStorAC.inf，安装</p>
+<p>大功告成，终于启动上了。</p>
+<p>顺便最后一提.... 现在买不到32G的傲腾，如果你能买到，请买32的，因为16G很多功能不能用，比如锁定和统计功能。</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://zjhxyz.github.io/tag/daily/" class="tag">
+                    日常
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://zjhxyz.github.io/post/netflix-de-qia-dun-jie-ba-wen-ti-jie-jue/">
+                  <h3 class="post-title">
+                    解决Netflix在PC上的卡顿结巴
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.min.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+
+var images = document.getElementsByTagName('img');
+var retina_reg = /.*?\|([0-9]*\.?[0-9]*x)/g
+for(var i = 0; i < images.length; i++) {
+    groups = retina_reg.exec(images[i].alt)
+    retina_reg.lastIndex = 0;
+    if (groups && groups[1]) {
+      images[i].srcset = images[i].src + " " + groups[1]
+    }
+}
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+
+
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: 'f30cd5c21f5496706d8b',
+        clientSecret: '69e71c1bcce0aac9948d3ba01ca4b54b63a1cd5d',
+        repo: 'blog',
+        owner: 'zjhxyz',
+        admin: ['zjhxyz'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://zjhxyz.github.io</id>
+    <title>Heerozh&apos;s Blog</title>
+    <updated>2020-08-07T03:29:53.217Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://zjhxyz.github.io"/>
+    <link rel="self" href="https://zjhxyz.github.io/atom.xml"/>
+    <logo>https://zjhxyz.github.io/images/avatar.png</logo>
+    <icon>https://zjhxyz.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2020, Heerozh&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[简单和多元线性回归的公式与从头实现]]></title>
+        <id>https://zjhxyz.github.io/post/duo-yuan-yi-yuan-xian-xing-hui-gui-de-gong-shi-yu-cong-tou-shi-xian/</id>
+        <link href="https://zjhxyz.github.io/post/duo-yuan-yi-yuan-xian-xing-hui-gui-de-gong-shi-yu-cong-tou-shi-xian/">
+        </link>
+        <updated>2020-03-21T07:51:30.000Z</updated>
+        <summary type="html"><![CDATA[<p>线性回归(Linear regression)是一种统计分析方法，简单且实用。虽然只是入门知识，但在用了各种奇技淫巧后你很可能会发现，还是简单的线性回归效果最好，少即是多。</p>
+<p>有很多库可以做这件事，但正好我最近开发中需要用GPU计算回归（可以加速非常多倍），顺便写一篇博客来测试网站的公式显示是否正常。</p>
+<p>这里介绍Least-squared regression，从头实现很容易，本身就是非常短的公式，做为ESL的第一课，可见多么基础。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>线性回归(Linear regression)是一种统计分析方法，简单且实用。虽然只是入门知识，但在用了各种奇技淫巧后你很可能会发现，还是简单的线性回归效果最好，少即是多。</p>
+<p>有很多库可以做这件事，但正好我最近开发中需要用GPU计算回归（可以加速非常多倍），顺便写一篇博客来测试网站的公式显示是否正常。</p>
+<p>这里介绍Least-squared regression，从头实现很容易，本身就是非常短的公式，做为ESL的第一课，可见多么基础。</p>
+<!-- more -->
+<h2 id="什么是线性回归">什么是线性回归</h2>
+<p>简单地说就是用线性方程来表示数据的趋势。</p>
+<p>一元：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mo>=</mo><mi>m</mi><mi>x</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">y=mx+b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">b</span></span></span></span><br>
+多元：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mo>=</mo><msub><mi>m</mi><mn>1</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>+</mo><msub><mi>m</mi><mn>2</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo>+</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">y=m_1x_1+m_2x_2+...+b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.73333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.73333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">b</span></span></span></span></p>
+<p><img src="https://zjhxyz.github.io/post-images/duo-yuan-yi-yuan-xian-xing-hui-gui-de-gong-shi-yu-cong-tou-shi-xian.png" alt="|1.5x" loading="lazy"><br>
+你可以考虑成每个点都是相同质量的恒星，回归线就是放一根长长的棍子，在这个重力环境下最后平衡的位置。</p>
+<h2 id="简单一元线性回归公式-linear-regression">简单一元线性回归公式 (Linear regression)</h2>
+<p>Simple OLS regression 单独列出来是因为更直观和易于理解：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi><mo>=</mo><mfrac><msub><mi>σ</mi><mrow><mi>x</mi><mo separator="true">,</mo><mi>y</mi></mrow></msub><msubsup><mi>σ</mi><mi>x</mi><mn>2</mn></msubsup></mfrac><mo>=</mo><mfrac><mrow><mi>E</mi><mo>[</mo><mo>(</mo><mi>X</mi><mo>−</mo><mi>μ</mi><mo>)</mo><mo>(</mo><mi>Y</mi><mo>−</mo><mi>ν</mi><mo>)</mo><mo>]</mo></mrow><mrow><mi>E</mi><mo>[</mo><mo>(</mo><mi>X</mi><mo>−</mo><mi>μ</mi><msup><mo>)</mo><mn>2</mn></msup><mo>]</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">m=\frac {\sigma_{x, y}} {\sigma^2_x}=\frac {E[(X-\mu)(Y-\nu)]} { E[(X-\mu)^2] }
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">m</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.04056em;vertical-align:-0.933em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1075599999999999em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.4530000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">x</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.933em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.363em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mopen">[</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault">μ</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">]</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mopen">[</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault">μ</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.22222em;">Y</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault" style="margin-right:0.06366em;">ν</span><span class="mclose">)</span><span class="mclose">]</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>就是协方差除于x的方差，如何推导到此公式就省略不谈了，但你应该已经感受到了此公式的魅力。</p>
+<p>然后b就是得出m后带入即可：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>b</mi><mo>=</mo><mover accent="true"><mi>y</mi><mo>ˉ</mo></mover><mo>−</mo><mi>m</mi><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover></mrow><annotation encoding="application/x-tex">b=\bar{y} - m\bar{x}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7777700000000001em;vertical-align:-0.19444em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.56778em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">y</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.19444em;">ˉ</span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.19444em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.56778em;vertical-align:0em;"></span><span class="mord mathdefault">m</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.56778em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">x</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.22222em;">ˉ</span></span></span></span></span></span></span></span></span></span></p>
+<h3 id="pytorch代码实现">pyTorch代码实现</h3>
+<p>用pyTorch是为了GPU加速。现在假设我们有一个y是2018-02月的NVDA价格数据：</p>
+<pre><code class="language-python">import torch
+y = torch.tensor([
+    225.58, 228.8 , 217.52, 230.93, 228.03, 232.63, 241.42, 246.5 ,
+    243.84, 249.08, 241.51, 242.15, 245.93, 246.58, 246.06, 242.  ,
+    232.21, 236.54, 235.65, 242.16
+])
+</code></pre>
+<p>然后我们生成x：</p>
+<pre><code class="language-python">x = torch.arange(len(y)).float()
+</code></pre>
+<blockquote>
+<p>tensor([ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13.,<br>
+14., 15., 16., 17., 18., 19.])</p>
+</blockquote>
+<p>回归代码（这里只为了可读性，有重复的计算）：</p>
+<pre><code class="language-python">demean_x = x - x.mean()
+demean_y = y - y.mean()
+n_1 = x.shape[0] - 1
+m = torch.sum(demean_x * demean_y / n_1) / torch.sum(demean_x ** 2 / n_1)
+b = y.mean() - m * x.mean()
+print(m, b)
+</code></pre>
+<blockquote>
+<p>(tensor(0.7734), tensor(230.4090))</p>
+</blockquote>
+<p>让我们绘图看看效果：</p>
+<pre><code class="language-python">from matplotlib import pyplot as plt
+plt.plot(x, y)
+plt.plot(x, m * x + b)
+plt.show()
+</code></pre>
+<p><img src="https://zjhxyz.github.io/post-images/1584787249072.png" alt="|1.5x" loading="lazy"><br>
+看起来不错🥂。</p>
+<h2 id="多元线性回归公式multiple-linear-regression">多元线性回归公式(Multiple Linear regression)</h2>
+<p>本质和简单回归一样，这里使用矩阵表达，且更是简短：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>b</mi><mo separator="true">,</mo><msub><mi>m</mi><mn>1</mn></msub><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><msub><mi>m</mi><mi>n</mi></msub><mo>=</mo><mo>(</mo><msup><mi>X</mi><mi>T</mi></msup><mi>X</mi><msup><mo>)</mo><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mi>X</mi><mi>T</mi></msup><mi>y</mi></mrow><annotation encoding="application/x-tex">b,m_1,...,m_n=(X^TX)^{-1}X^Ty 
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.1413309999999999em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913309999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.864108em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913309999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span></span></span></span></span></p>
+<p>一个公式都解决了，同样也适用于简单线性回归。</p>
+<p>题外话，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>X</mi><mi>T</mi></msup><mi>X</mi></mrow><annotation encoding="application/x-tex">X^TX</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span></span></span></span>在各处都能见到，还有个知名的算法交易做市商名字就叫XTX。</p>
+<h3 id="pytorch代码实现-2">pyTorch代码实现</h3>
+<p>公式内含了很多隐藏信息，而文字介绍又太繁琐，让我们用代码来实现下。</p>
+<p>我一直觉得如果教科书和论文上的公式，都有相应代码和每步运行结果的话，读起来疑问会少很多，毕竟要让代码可执行得完全信息。</p>
+<p>这里用二元线性回归来演示，最常见的就是用一元二次方程(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mo>=</mo><mi>a</mi><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>b</mi><mi>x</mi><mo>+</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">y=ax^2+bx+c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">a</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">b</span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">c</span></span></span></span>)，也就是拟合曲线。既然是一元方程，为什么是二元回归？因为回归的二元是指有2个independent variable：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo separator="true">,</mo><msup><mi>x</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">x, x^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.008548em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></p>
+<p>依旧使用上面的x, y数据，首先让我们来生成X矩阵，包含<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo separator="true">,</mo><msup><mi>x</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">x, x^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.008548em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>，但要注意的是这里第一列加入了常量1，为了矩阵正定和求b（图中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mover accent="true"><mi>β</mi><mo>^</mo></mover><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">{\hat\beta}_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2020199999999999em;vertical-align:-0.24414em;"></span><span class="mord"><span class="mord"><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9578799999999998em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathdefault" style="margin-right:0.05278em;">β</span></span><span style="top:-3.26344em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.16666em;">^</span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.19444em;"><span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.20696799999999996em;"><span style="top:-2.4558600000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24414em;"><span></span></span></span></span></span></span></span></span></span>）：<br>
+<img src="https://zjhxyz.github.io/post-images/1585737827393.jpg" alt="" loading="lazy"></p>
+<pre><code class="language-python">X = torch.stack([torch.ones(x.shape), x, x ** 2]).T
+</code></pre>
+<blockquote>
+<p>tensor([[  1.,   0.,   0.],<br>
+[  1.,   1.,   1.],<br>
+[  1.,   2.,   4.],<br>
+[  1.,   3.,   9.],<br>
+[  1.,   4.,  16.],<br>
+[  1.,   5.,  25.],<br>
+...<br>
+[  1.,  15., 225.],<br>
+[  1.,  16., 256.],<br>
+[  1.,  17., 289.],<br>
+[  1.,  18., 324.],<br>
+[  1.,  19., 361.]])</p>
+</blockquote>
+<p>然后直接运算就行了：</p>
+<pre><code class="language-python">b, m1, m2 = (X.T @ X).inverse() @ X.T @ y
+print(b, m1, m2)
+</code></pre>
+<blockquote>
+<p>(tensor(220.5210), tensor(4.0694), tensor(-0.1735))</p>
+</blockquote>
+<p>是的，这就是结果，让我们绘图看看：</p>
+<pre><code class="language-python">plt.plot(x, y)
+plt.plot(x, m1 * x + m2 * x**2 + b)
+plt.show()
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://zjhxyz.github.io/post-images/1584811915396.png" alt="|1.5x" loading="lazy"></figure>
+<p>非常完美👏，是否很简单？但其实后面还有更重要的概念，比如多个解的情况和正交处理。</p>
+<h2 id="共线性和正交问题">共线性和正交问题</h2>
+<p>实际使用中简单的进行多项式回归就能解决的问题并不常见，一般都是要对观察值进行回归，而观察值基本就不会完全独立，也就是x之间协方差不为0的。<br>
+保持x之间独立可以让coefficient只对该x负责不受其他x影响，这就需要正交调整。</p>
+<p>具体不做细述，如果你想要快速解决问题，这里提供粗略的解决方案：使用qr decomposition。通过<code>Q, R = torch.qr(X)</code> 算出后，使用公式 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>b</mi><mo separator="true">,</mo><msub><mi>m</mi><mn>1</mn></msub><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><msub><mi>m</mi><mi>n</mi></msub><mo>=</mo><msup><mi>R</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mi>Q</mi><mi>T</mi></msup><mi>y</mi></mrow><annotation encoding="application/x-tex">b, m_1,...,m_n=R^{-1}Q^Ty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.035771em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">Q</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span></span></span></span> 来解决</p>
+<p>有兴趣可以去看ESL 3.2.3 Multiple Regression from Simple Univariate Regression，用一元回归来多元回归。</p>
+<p>作者：张戬昊 Heerozh (heerozh.com)</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[导出最终幻想15的截图到JPG]]></title>
+        <id>https://zjhxyz.github.io/post/dao-chu-zui-zhong-huan-xiang-15-de-jie-tu-dao-jpg/</id>
+        <link href="https://zjhxyz.github.io/post/dao-chu-zui-zhong-huan-xiang-15-de-jie-tu-dao-jpg/">
+        </link>
+        <updated>2020-03-14T20:44:34.000Z</updated>
+        <summary type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://heerozh.com/post-images/dao-chu-zui-zhong-huan-xiang-15-de-jie-tu-dao-jpg.jpg" alt="" loading="lazy"></figure>
+<p>一般RPG本身就可以算是一种公路片，而FF15就是完全版的公路片。其中照片功能保存了整个冒险和成长的回忆，非常有创意，难免就让人想要把这些回忆保存下来。</p>
+<p>顺带一提FF15给我的感觉是最好的FF，没有之一，唯一可惜的是后期他们显然没时间做第二张大地图了。 FF系列除了网游，从6开始都通关了，还是可以评价以一下的。</p>
+<p>下面是批量导出的方法，首先照片的位置在存档目录下：</p>
+]]></summary>
+        <content type="html"><![CDATA[<figure data-type="image" tabindex="1"><img src="https://zjhxyz.github.io/post-images/dao-chu-zui-zhong-huan-xiang-15-de-jie-tu-dao-jpg.jpg" alt="" loading="lazy"></figure>
+<p>一般RPG本身就可以算是一种公路片，而FF15就是完全版的公路片。其中照片功能保存了整个冒险和成长的回忆，非常有创意，难免就让人想要把这些回忆保存下来。</p>
+<p>顺带一提FF15给我的感觉是最好的FF，没有之一，唯一可惜的是后期他们显然没时间做第二张大地图了。 FF系列除了网游，从6开始都通关了，还是可以评价以一下的。</p>
+<p>下面是批量导出的方法，首先照片的位置在存档目录下：</p>
+<!-- more -->
+<blockquote>
+<p>C:\Users\xxx\Documents\My Games\FINAL FANTASY XV<br>
+在里面找snapshot目录</p>
+</blockquote>
+<p>照片文件是SS后缀，然而其实是JPEG格式，但是文件头加了额外的信息比如拍照时间和地点等。</p>
+<p>可以用代码去掉，下面是Python的转换代码：</p>
+<pre><code class="language-python">import glob
+files = glob.glob(r'C:\xxx\ff15\*.ss')
+for fn in files:
+    with open(fn, 'rb') as in_file:
+        with open(fn + '.jpg', 'wb') as out_file:
+            out_file.write(in_file.read()[0x24:])
+</code></pre>
+<p><img src="https://zjhxyz.github.io/post-images/1585821080591.jpg" alt="" loading="lazy"><br>
+<img src="https://zjhxyz.github.io/post-images/1585820960083.jpg" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[安装傲腾Optane内存加速过程的各种问题解决]]></title>
+        <id>https://zjhxyz.github.io/post/an-zhuang-ao-teng-optane-nei-cun-jia-su-guo-cheng-de-ge-chong-wen-ti-jie-jue/</id>
+        <link href="https://zjhxyz.github.io/post/an-zhuang-ao-teng-optane-nei-cun-jia-su-guo-cheng-de-ge-chong-wen-ti-jie-jue/">
+        </link>
+        <updated>2020-03-14T20:33:06.000Z</updated>
+        <summary type="html"><![CDATA[<p>买了个傲腾给游戏盘加速想试试，遇到了不少问题（坑）记录下。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>买了个傲腾给游戏盘加速想试试，遇到了不少问题（坑）记录下。</p>
+<!-- more -->
+<h2 id="1需要末尾5mb的未分配空间">1.需要末尾5MB的“未分配”空间</h2>
+<p>首先安装这东西要求系统盘末尾保留5MB的“未分配”空间，一般来说你右键点你最后一个磁盘卷，选压缩，输入5MB，就会留给你。</p>
+<p>但我的win10安装时会在末尾留个不能动的oem空间，如图：</p>
+<figure data-type="image" tabindex="1"><img src="https://zjhxyz.github.io/post-images/1584367097868.png" alt="img" loading="lazy"></figure>
+<p>如果你希望给系统盘加速，那么你要想办法删除那个空间了，不知是否会有问题。</p>
+<p>好在我给我要加速的游戏盘压缩个5MB空间就可以通过这步。</p>
+<h2 id="2需切换sata到raid模式造成启动无限转圈">2.需切换SATA到RAID模式，造成启动无限转圈</h2>
+<p>如果你本来开的是AHCI模式，那么安装程序会改成RAID模式，然后你系统就无法启动了。</p>
+<p>我尝试了以前改AHCI的办法企图通过这步，就是进入一次安全模式即可：</p>
+<ol>
+<li>
+<p>改回AHCI</p>
+</li>
+<li>
+<p>启动系统，msconfig选安全引导：最小，重启</p>
+</li>
+<li>
+<p>进入系统前BIOS改RIAD(我的叫Intel RST premium)</p>
+</li>
+<li>
+<p>进入系统安全模式，并改回正常启动即可</p>
+</li>
+</ol>
+<p>我以为这样可以解决进入系统的问题，没想到win10有个大坑：</p>
+<h3 id="用微软账号并用pin码登陆win10的千万别随便进安全模式">用微软账号并用PIN码登陆Win10的，千万别随便进安全模式！！！</h3>
+<p>为什么？</p>
+<blockquote>
+<p>因为安全模式不支持Pin码登陆。</p>
+</blockquote>
+<p>那么用微软账号的密码登陆？</p>
+<blockquote>
+<p>是的，但我账号是随机生成的密码，且定期更新。</p>
+</blockquote>
+<p>你忘记密码了！</p>
+<blockquote>
+<p>不，因为一直Pin登陆，所以他不知道我改密码了，还是老的随机密码且不知道是哪一次的。如果有网络可以通过网络让他更新密码。</p>
+</blockquote>
+<p>那就让它更新啊？</p>
+<blockquote>
+<p>见证奇迹的时刻到了，最小安全引导没有网络.....</p>
+</blockquote>
+<p>....</p>
+<p>...</p>
+<p>死循环</p>
+<p><strong>解决办法：</strong><br>
+启动PE，用PE的UEFI修复工具加载引导区，一般会加载到Z:\</p>
+<p>然后bcdedit /store Z:\efi\Microsoft\boot\BCD /deletevalue {defualt} safeboot</p>
+<figure data-type="image" tabindex="2"><img src="https://zjhxyz.github.io/post-images/an-zhuang-ao-teng-optane-nei-cun-jia-su-guo-cheng-de-ge-chong-wen-ti-jie-jue.jpg" alt="" loading="lazy"></figure>
+<hr>
+<p>接下来我们还要解决AHCI转RAID的问题，我因为要加速的是副盘，我的做法是BIOS里，把我的主盘M2_1的RAID设为关闭即可。就在改RAID地方的下面。</p>
+<h1 id="启动傲腾显示0xa008002e版本太旧或者找不到驱动程序的提示">启动傲腾显示0xA008002E，版本太旧或者找不到驱动程序的提示</h1>
+<p>是驱动不对，这个提示很不友好，没告诉具体哪个。且官网上还说如果你是从微软商城安装的傲腾和储存管理套件，不需要另外安装驱动，然而他瞎说的，你还是要安装。</p>
+<p><strong>解决办法：</strong><br>
+在官网，SetupOptaneMemory.exe的下面，下载f6flpy-x64.zip，右键iaStorAC.inf，安装</p>
+<p>大功告成，终于启动上了。</p>
+<p>顺便最后一提.... 现在买不到32G的傲腾，如果你能买到，请买32的，因为16G很多功能不能用，比如锁定和统计功能。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[解决Netflix在PC上的卡顿结巴]]></title>
+        <id>https://zjhxyz.github.io/post/netflix-de-qia-dun-jie-ba-wen-ti-jie-jue/</id>
+        <link href="https://zjhxyz.github.io/post/netflix-de-qia-dun-jie-ba-wen-ti-jie-jue/">
+        </link>
+        <updated>2020-03-14T20:26:21.000Z</updated>
+        <summary type="html"><![CDATA[<p>用Edge或Win10的Netflix App看片经常会有卡顿现象，有的片子特别明显。虽然Chrome没有这个问题，但可惜不支持杜比全景声和4K画质。</p>
+<p>搜了一圈发现此问题和电竞显示器有关，应该是Edge或App用了什么解码器和G-SYNC的兼容问题。</p>
+<p>总之关了G-SYNC或刷新率调到100hz即可。</p>
+<p>当然买个Chromecast之类在电视上播放兼容性最好，可惜我一个人的话就不乐意特地跑电视上看片。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>用Edge或Win10的Netflix App看片经常会有卡顿现象，有的片子特别明显。虽然Chrome没有这个问题，但可惜不支持杜比全景声和4K画质。</p>
+<p>搜了一圈发现此问题和电竞显示器有关，应该是Edge或App用了什么解码器和G-SYNC的兼容问题。</p>
+<p>总之关了G-SYNC或刷新率调到100hz即可。</p>
+<p>当然买个Chromecast之类在电视上播放兼容性最好，可惜我一个人的话就不乐意特地跑电视上看片。</p>
+<!-- more -->
+]]></content>
+    </entry>
+</feed>
