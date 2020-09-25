@@ -2,13 +2,130 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://zjhxyz.github.io</id>
     <title>Heerozh&apos;s Blog</title>
-    <updated>2020-08-07T03:40:58.347Z</updated>
+    <updated>2020-09-25T11:22:05.853Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://zjhxyz.github.io"/>
     <link rel="self" href="https://zjhxyz.github.io/atom.xml"/>
     <logo>https://zjhxyz.github.io/images/avatar.png</logo>
     <icon>https://zjhxyz.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Heerozh&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[自制CO2二氧化碳检测仪]]></title>
+        <id>https://zjhxyz.github.io/post/zi-zhi-co2-er-yang-hua-tan-jian-ce-yi/</id>
+        <link href="https://zjhxyz.github.io/post/zi-zhi-co2-er-yang-hua-tan-jian-ce-yi/">
+        </link>
+        <updated>2020-09-25T10:31:25.000Z</updated>
+        <content type="html"><![CDATA[<p>这几天在玩嵌入系统Arduino，发现学起来很简单，就打算组个二氧化碳检测仪。主要因为PM2.5一直关窗，想要知道下房间氧气到底够不够。</p>
+<h2 id="组装使用材料">组装使用材料：</h2>
+<table>
+<thead>
+<tr>
+<th>材料</th>
+<th>价格RMB（含运费）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arduino Nano 兼容开发板</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Logic Level Converter</td>
+<td>5.5</td>
+</tr>
+<tr>
+<td>DS-CO2-20 传感器</td>
+<td>145</td>
+</tr>
+<tr>
+<td>SSD1306 128x64 OLED 显示屏</td>
+<td>14</td>
+</tr>
+<tr>
+<td>3x7 双面万能版</td>
+<td>5.14</td>
+</tr>
+<tr>
+<td>电线</td>
+<td>4</td>
+</tr>
+<tr>
+<td>M2*15 螺丝柱</td>
+<td>5</td>
+</tr>
+<tr>
+<td><s>焊丝</s></td>
+<td><s>40</s></td>
+</tr>
+<tr>
+<td><s>苹果电源改T12焊台</s></td>
+<td><s>170</s></td>
+</tr>
+<tr>
+<td><s>烙铁架/高温海绵</s></td>
+<td><s>20</s></td>
+</tr>
+</tbody>
+</table>
+<p><s>苹果电源真的很带劲，焊台不说顶2000，妥妥能顶1000左右的。</s></p>
+<figure data-type="image" tabindex="1"><img src="https://zjhxyz.github.io/post-images/1601032302057.png" alt="" loading="lazy"></figure>
+<h2 id="线路图">线路图</h2>
+<p>传感器通讯协议是3.3v的UART，所以要Level Converter转换下</p>
+<figure data-type="image" tabindex="2"><img src="https://zjhxyz.github.io/post-images/1601032188987.png" alt="" loading="lazy"></figure>
+<h2 id="代码">代码</h2>
+<p>这里只贴简单的获取传感器数值的代码：</p>
+<pre><code class="language-C++">#include &lt;SoftwareSerial.h&gt;
+
+#define rxPin 12
+#define txPin 11
+SoftwareSerial CO2_Serial(rxPin, txPin);
+const byte readCO2[] = {0x42, 0x4d, 0xe3, 0x00, 0x00, 0x01, 0x72}; //Command
+byte responses[12];
+
+void setup()
+{
+  CO2_Serial.begin(9600);
+}
+
+unsigned int GetCo2()
+{
+  int valMultiplier = 1;
+
+  while (!CO2_Serial.available())
+  {
+    CO2_Serial.write(readCO2, 7);
+    delay(1000);
+  }
+
+  CO2_Serial.setTimeout(2000);
+  CO2_Serial.readBytes(responses, 12);
+
+  int high = responses[4];              //high byte
+  int low = responses[5];               //low byte
+  unsigned int val = high * 256 + low; 
+  return val * valMultiplier;
+}
+
+void loop()
+{
+  auto co2 = GetCo2();
+  draw_co2(co2);
+  delay(1000);
+}
+</code></pre>
+<p>显示部分我用的u8g2库。为了增加渲染速度，只能渲染部分区域，所以我开了fullbuffer，结果直接用掉了92%的内存，这么看的话，可能换个库比较好。</p>
+<h2 id="结论">结论</h2>
+<p>那么回归本来的问题，一直关窗氧气到底够不够呢？以下是我1室大约30<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>m</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">m^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>的经验：</p>
+<ul>
+<li>关窗大概每30分钟CO<sub>2</sub>上升500ppm，最大会在3000-4000ppm左右（视测试位置）</li>
+<li>窗户开一点缝隙，最大可以稳定在1000左右</li>
+<li>门窗都开一点，可以稳定在500左右</li>
+</ul>
+<p><em>每10,000ppm相当于1%含量CO<sub>2</sub></em></p>
+<p>可见南北同时透气很重要，当然以后有条件要装新风系统。</p>
+<p>那么多少CO<sub>2</sub>对人体有害？这个科学上有争议，有实验发现1200以上会降低认知，但又有键盘打字实验发现5000都不会。生命安全上的医学建议为待在1w以上环境不要超过8小时，总之保持在1000-2000肯定是没问题的。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[简单和多元线性回归的公式与从头实现]]></title>
         <id>https://zjhxyz.github.io/post/duo-yuan-yi-yuan-xian-xing-hui-gui-de-gong-shi-yu-cong-tou-shi-xian/</id>
