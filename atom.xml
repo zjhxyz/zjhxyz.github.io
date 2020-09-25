@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://zjhxyz.github.io</id>
     <title>Heerozh&apos;s Blog</title>
-    <updated>2020-09-25T11:23:32.836Z</updated>
+    <updated>2020-09-25T11:27:08.612Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://zjhxyz.github.io"/>
     <link rel="self" href="https://zjhxyz.github.io/atom.xml"/>
@@ -117,6 +117,7 @@ void loop()
 }
 </code></pre>
 <p>显示部分我用的u8g2库。为了增加渲染速度，只能渲染部分区域，所以我开了fullbuffer，结果直接用掉了92%的内存，这么看的话，可能换个库比较好。</p>
+<figure data-type="image" tabindex="3"><img src="https://zjhxyz.github.io/post-images/1601033221026.png" alt="" loading="lazy"></figure>
 <h2 id="结论">结论</h2>
 <p>那么回归本来的问题，一直关窗氧气到底够不够呢？以下是我1室大约30<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>m</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">m^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>的经验：</p>
 <ul>
