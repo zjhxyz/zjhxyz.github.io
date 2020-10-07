@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://zjhxyz.github.io</id>
     <title>Heerozh&apos;s Blog</title>
-    <updated>2020-09-25T12:11:24.170Z</updated>
+    <updated>2020-10-07T08:37:10.895Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://zjhxyz.github.io"/>
     <link rel="self" href="https://zjhxyz.github.io/atom.xml"/>
@@ -70,7 +70,7 @@
 </tr>
 </tbody>
 </table>
-<p><s>苹果电源真的很带劲，焊台不说顶2000元，妥妥能顶1000左右的。</s></p>
+<p><s>苹果电源真的很带劲，焊台不说顶2000元，妥妥能顶1000左右的。</s> 题外话，划掉</p>
 <figure data-type="image" tabindex="1"><img src="https://zjhxyz.github.io/post-images/1601032302057.png" alt="" loading="lazy"></figure>
 <h2 id="线路图">线路图</h2>
 <p>传感器通讯协议是3.3v的UART，所以要Level Converter转换下</p>
@@ -352,12 +352,12 @@ for fn in files:
         <summary type="html"><![CDATA[<p>用Edge或Win10的Netflix App看片经常会有卡顿现象，有的片子特别明显。虽然Chrome没有这个问题，但可惜不支持杜比全景声和4K画质。</p>
 <p>搜了一圈发现此问题和电竞显示器有关，应该是Edge或App用了什么解码器和G-SYNC的兼容问题。</p>
 <p>总之关了G-SYNC或刷新率调到100hz即可。</p>
-<p>当然买个Chromecast之类在电视上播放兼容性最好，可惜我一个人的话就不乐意特地跑电视上看片。</p>
+<p>当然买个Chromecast之类在电视上播放兼容性最好，可惜我一个人的话就不乐意特地跑电视上看片，有条件的还是建议使用这种方法。</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>用Edge或Win10的Netflix App看片经常会有卡顿现象，有的片子特别明显。虽然Chrome没有这个问题，但可惜不支持杜比全景声和4K画质。</p>
 <p>搜了一圈发现此问题和电竞显示器有关，应该是Edge或App用了什么解码器和G-SYNC的兼容问题。</p>
 <p>总之关了G-SYNC或刷新率调到100hz即可。</p>
-<p>当然买个Chromecast之类在电视上播放兼容性最好，可惜我一个人的话就不乐意特地跑电视上看片。</p>
+<p>当然买个Chromecast之类在电视上播放兼容性最好，可惜我一个人的话就不乐意特地跑电视上看片，有条件的还是建议使用这种方法。</p>
 <!-- more -->
 ]]></content>
     </entry>
