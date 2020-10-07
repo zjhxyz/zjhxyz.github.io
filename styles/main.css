@@ -250,7 +250,7 @@ body {
     color: white;
   }
   a {
-    color: #adb5bd;
+    color: #f1f3f5;
   }
   .sidebar {
     background-size: unset;
@@ -265,10 +265,10 @@ body {
   .post-detail .post-content h4,
   .post-detail .post-content h5,
   .post-detail .post-content h6 {
-    color: #dee2e6;
+    color: #f1f3f5;
   }
   .post-detail .post-content p {
-    color: #e9ecef;
+    color: #ced4da;
   }
 }
 body {
