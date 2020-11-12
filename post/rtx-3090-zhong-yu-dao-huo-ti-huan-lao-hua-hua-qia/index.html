@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://zjhxyz.github.io/favicon.ico?v=1605166050985">
+<link rel="shortcut icon" href="https://zjhxyz.github.io/favicon.ico?v=1605166083779">
 <link rel="stylesheet" href="https://zjhxyz.github.io/styles/main.css">
 
 
@@ -55,7 +55,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://zjhxyz.github.io">
-        <img src="https://zjhxyz.github.io/images/avatar.png?v=1605166050985" class="site-logo">
+        <img src="https://zjhxyz.github.io/images/avatar.png?v=1605166083779" class="site-logo">
         <h1 class="site-title">Heerozh&#39;s Blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -136,7 +136,7 @@
 <p>我的机子还是老的PCIe3，总线速度主要影响Copy数据到显存的速度，我只有初始化时Copy一次，就没需求上PCIe4了。</p>
 <p>总的来说，温度比2080Ti公版要低一些，CUDA满负荷运行2晚温度稳定在70度左右，毕竟卡大不少。</p>
 <p>噪音方面风扇音量很轻，至少我机箱风扇噪音远远大于显卡，因为我加了层HEPA过滤网，好处是机箱内灰尘很少和猫毛基本没有了，上面的2080Ti图片就是用了2年直接拿出来拍的，可见上面没多少灰。</p>
-<p>如果要做深度学习或并行计算，记得上CUDA11，老版本不支持3090。</p>
+<p>如果要做深度学习或并行计算，记得上CUDA11，老版本CUDA10不支持3090。</p>
 <p>测试了下RTX 3090的算力，对比2080Ti。使用Pytorch1.7+CUDA11，跑的是我自己的程序，虽然不具参考意义，但可以比较出2卡的差距，结果如下：</p>
 <table>
 <thead>
