@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://zjhxyz.github.io</id>
     <title>Heerozh&apos;s Blog</title>
-    <updated>2020-11-12T10:26:57.077Z</updated>
+    <updated>2020-11-12T13:24:01.599Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://zjhxyz.github.io"/>
     <link rel="self" href="https://zjhxyz.github.io/atom.xml"/>
@@ -10,7 +10,7 @@
     <icon>https://zjhxyz.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Heerozh&apos;s Blog</rights>
     <entry>
-        <title type="html"><![CDATA[RTX 3090终于到货，替换老花花卡]]></title>
+        <title type="html"><![CDATA[RTX 3090初上机，以及和2080Ti对比]]></title>
         <id>https://zjhxyz.github.io/post/rtx-3090-zhong-yu-dao-huo-ti-huan-lao-hua-hua-qia/</id>
         <link href="https://zjhxyz.github.io/post/rtx-3090-zhong-yu-dao-huo-ti-huan-lao-hua-hua-qia/">
         </link>
