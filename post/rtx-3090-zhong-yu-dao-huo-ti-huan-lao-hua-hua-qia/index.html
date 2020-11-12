@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://zjhxyz.github.io/favicon.ico?v=1605166536263">
+<link rel="shortcut icon" href="https://zjhxyz.github.io/favicon.ico?v=1605176814590">
 <link rel="stylesheet" href="https://zjhxyz.github.io/styles/main.css">
 
 
@@ -44,8 +44,7 @@
 
     <meta name="description" content="等了一个月货，终于从JD到手了技嘉 3090 Gaming OC24G，选这个卡主要是因为有4年保修，方便以后二手出手，而且之前我是2080Ti Founders公版，属于经常花屏的花花卡就很吓人。简单测试了下，对比：
 
-
-厚度大概是208..." />
+厚度大概是2080..." />
     <meta name="keywords" content="数据科学,游戏,日常" />
   </head>
   <body>
@@ -55,7 +54,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://zjhxyz.github.io">
-        <img src="https://zjhxyz.github.io/images/avatar.png?v=1605166536263" class="site-logo">
+        <img src="https://zjhxyz.github.io/images/avatar.png?v=1605176814590" class="site-logo">
         <h1 class="site-title">Heerozh&#39;s Blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -129,15 +128,17 @@
             <div class="post-content" v-pre>
               <p>等了一个月货，终于从JD到手了技嘉 3090 Gaming OC24G，选这个卡主要是因为有4年保修，方便以后二手出手，而且之前我是2080Ti Founders公版，属于经常花屏的花花卡就很吓人。简单测试了下，对比：</p>
 <!-- more -->
-<p><img src="https://zjhxyz.github.io/post-images/1605162332312.png" alt="" loading="lazy"><br>
-厚度大概是2080Ti公版的1.7倍，长度如图，所以机箱需要拆掉光驱/硬盘笼，不然装不上，不过现在谁还用这些啊。</p>
+<p>厚度大概是2080Ti公版的1.7倍，长度如图，所以机箱需要拆掉光驱/硬盘笼，不然装不上，不过现在谁还用这些啊。<br>
+<img src="https://zjhxyz.github.io/post-images/1605162332312.png" alt="" loading="lazy"></p>
 <p>插入上电，电源是EVGA 850P2，850W：<br>
 <img src="https://zjhxyz.github.io/post-images/1605162369282.png" alt="" loading="lazy"></p>
-<p>我的机子还是老的PCIe3，总线速度主要影响Copy数据到显存的速度，我只有初始化时Copy一次，就没需求上PCIe4了。</p>
-<p>总的来说，温度比2080Ti公版要低一些，CUDA满负荷运行2晚温度稳定在70度左右，毕竟卡大不少。</p>
-<p>用小米插座测量功耗，总体运行在450W左右，带上我2显示器和2路由器等等，大概600W，室内可以当暖气使用，效果真的很好，又可以计算又可以免费取暖，赚大了！</p>
+<p>总的来说，温度比2080Ti公版要低一些，CUDA满负荷运行5天温度稳定在70度左右，毕竟卡大不少。</p>
+<p>用小米插座测量功率，总体运行在500W左右，带上我2显示器和2路由器等等，大概600W，室内可以当暖气使用，效果真的很好，又可以计算又可以免费取暖 <s>（赚大了）</s>！<br>
+<img src="https://zjhxyz.github.io/post-images/1605176666498.png" alt="" loading="lazy"></p>
 <p>噪音方面风扇音量很轻，至少我机箱风扇噪音远远大于显卡，因为我加了层HEPA过滤网，好处是机箱内灰尘很少和猫毛基本没有了，上面的2080Ti图片就是用了2年直接拿出来拍的，可见上面没多少灰。</p>
+<h2 id="算力">算力</h2>
 <p>如果要做深度学习或并行计算，记得上CUDA11，老版本CUDA10不支持3090。</p>
+<p>我的机子还是老的PCIe3，总线速度主要影响Copy数据到显存的速度，我只有初始化时Copy一次，就没需求上PCIe4了。如果你用深度学习需要batch，那么上PCIe4是必要的。</p>
 <p>测试了下RTX 3090的算力，对比2080Ti。使用Pytorch1.7+CUDA11，跑的是我自己的程序，虽然不具参考意义，但可以比较出2卡的差距，结果如下：</p>
 <table>
 <thead>
