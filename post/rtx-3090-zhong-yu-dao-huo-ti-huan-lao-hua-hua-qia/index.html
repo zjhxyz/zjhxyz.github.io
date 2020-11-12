@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>游戏 | Heerozh&#39;s Blog</title>
+<title>RTX 3090终于到货，替换老花花卡 | Heerozh&#39;s Blog</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -21,6 +21,12 @@
 
 
 
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  
+
+  
+
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -36,7 +42,11 @@
 </script>
 
 
-    <meta name="description" content="">
+    <meta name="description" content="等了一个月货，终于从JD到手了技嘉 3090 Gaming OC24G，之前我是2080Ti Founders公版，属于经常花屏的花花卡。简单测试了下，对比：
+
+
+厚度大概是2080Ti公版的1.7倍，长度如图，所以机箱需要拆掉光驱/硬盘笼..." />
+    <meta name="keywords" content="" />
   </head>
   <body>
     <div id="app" class="main">
@@ -109,37 +119,71 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          <h2 class="current-tag">标签: 游戏</h2>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://zjhxyz.github.io/post/dao-chu-zui-zhong-huan-xiang-15-de-jie-tu-dao-jpg/">
-                  <h2 class="post-title">导出最终幻想15的截图到JPG</h2>
-                </a>
-                <div class="post-info">
-                  2020-03-15
-                </div>
-                <div class="post-abstract">
-                  <figure data-type="image" tabindex="1"><img src="https://heerozh.com/post-images/dao-chu-zui-zhong-huan-xiang-15-de-jie-tu-dao-jpg.jpg" alt="" loading="lazy"></figure>
-<p>一般RPG本身就可以算是一种公路片，而FF15就是完全版的公路片。其中照片功能保存了整个冒险和成长的回忆，非常有创意，难免就让人想要把这些回忆保存下来。</p>
-<p>顺带一提FF15给我的感觉是最好的FF，没有之一，唯一可惜的是后期他们显然没时间做第二张大地图了。 FF系列除了网游，从6开始都通关了，还是可以评价以一下的。</p>
-<p>下面是批量导出的方法，首先照片的位置在存档目录下：</p>
-
-                </div>
+          <div class="post-detail">
+            <h2 class="post-title">RTX 3090终于到货，替换老花花卡</h2>
+            <div class="post-info">2020-11-12</div>
+            <!-- 
+              <div class="feature-container" style="background-image: url('https://zjhxyz.github.io/post-images/rtx-3090-zhong-yu-dao-huo-ti-huan-lao-hua-hua-qia.png')">
               </div>
-              
-                <a class="right" href="https://zjhxyz.github.io/post/dao-chu-zui-zhong-huan-xiang-15-de-jie-tu-dao-jpg/">
-                  <div class="feature-container" style="background-image: url('https://zjhxyz.github.io/post-images/dao-chu-zui-zhong-huan-xiang-15-de-jie-tu-dao-jpg.jpg')">
-                  </div>
-                </a>
-              
-            </article>
-          
+             -->
+            <div class="post-content" v-pre>
+              <p>等了一个月货，终于从JD到手了技嘉 3090 Gaming OC24G，之前我是2080Ti Founders公版，属于经常花屏的花花卡。简单测试了下，对比：</p>
+<!-- more -->
+<p><img src="https://zjhxyz.github.io/post-images/1605162332312.png" alt="" loading="lazy"><br>
+厚度大概是2080Ti公版的1.7倍，长度如图，所以机箱需要拆掉光驱/硬盘笼，不然装不上，不过现在谁还用这些啊。</p>
+<p>插入上电：<br>
+<img src="https://zjhxyz.github.io/post-images/1605162369282.png" alt="" loading="lazy"></p>
+<p>我的机子还是老的PCIe3，总线速度主要影响Copy数据到显存的速度，我只有初始化时Copy一次，就没需求上PCIe4了。</p>
+<p>总的来说，温度比2080Ti公版要低一些，CUDA满负荷运行2晚温度稳定在70度左右，毕竟卡大不少。</p>
+<p>噪音方面风扇音量很轻，至少我机箱风扇噪音远远大于显卡，因为我加了层HEPA过滤网，好处是机箱内灰尘很少和猫毛基本没有了，上面的2080Ti图片就是用了2年直接拿出来拍的，可见上面没多少灰。</p>
+<p>测试了下RTX 3090的算力，对比2080Ti。使用Pytorch，跑的是我自己的程序，不具参考意义，大致对比下吧，结果如下：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>3090</th>
+<th>2080Ti</th>
+<th>CPU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>简单Mean</td>
+<td>88 ms (<strong>34x</strong>)</td>
+<td>144 ms (<strong>20x</strong>)</td>
+<td>3 s (1x)</td>
+</tr>
+<tr>
+<td>混合算法</td>
+<td>184 ms (<strong>76x</strong>)</td>
+<td>282 ms (<strong>50x</strong>)</td>
+<td>14 s  (1x)</td>
+</tr>
+</tbody>
+</table>
 
-          <div class="pagination-container">
-  
-  
-</div>
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://zjhxyz.github.io/post/zi-zhi-co2-er-yang-hua-tan-jian-ce-yi/">
+                  <h3 class="post-title">
+                    自制CO2二氧化碳检测仪
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
 
         </div>
       </div>
@@ -181,6 +225,29 @@ for(var i = 0; i < images.length; i++) {
   <!-- The loading of KaTeX is deferred to speed up page rendering -->
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
 
+
+
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: 'f30cd5c21f5496706d8b',
+        clientSecret: '69e71c1bcce0aac9948d3ba01ca4b54b63a1cd5d',
+        repo: 'zjhxyz.github.io',
+        owner: 'zjhxyz',
+        admin: ['zjhxyz'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
 
 
 
