@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://zjhxyz.github.io/favicon.ico?v=1605187438741">
+<link rel="shortcut icon" href="https://zjhxyz.github.io/favicon.ico?v=1617207857997">
 <link rel="stylesheet" href="https://zjhxyz.github.io/styles/main.css">
 
 
@@ -42,7 +42,7 @@
 </script>
 
 
-    <meta name="description" content="这几天在玩嵌入系统Arduino，发现学起来很简单，就打算组个二氧化碳检测仪。主要因为PM2.5一直关窗，想要知道下房间氧气到底够不够。
+    <meta name="description" content="这几天在玩嵌入系统Arduino，发现学起来很简单，就打算组个二氧化碳检测仪。主要因为PM2.5一直关窗，想要知道下房间氧气到底够不够，到底要装什么样的新风。
 
 组装使用材料：
 
@@ -54,8 +54,7 @@
 
 
 
-Arduino Nano 兼容开发板
-15..." />
+Arduino Na..." />
     <meta name="keywords" content="编程,日常" />
   </head>
   <body>
@@ -65,7 +64,7 @@ Arduino Nano 兼容开发板
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://zjhxyz.github.io">
-        <img src="https://zjhxyz.github.io/images/avatar.png?v=1605187438741" class="site-logo">
+        <img src="https://zjhxyz.github.io/images/avatar.png?v=1617207857997" class="site-logo">
         <h1 class="site-title">Heerozh&#39;s Blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -137,7 +136,7 @@ Arduino Nano 兼容开发板
               </div>
              -->
             <div class="post-content" v-pre>
-              <p>这几天在玩嵌入系统Arduino，发现学起来很简单，就打算组个二氧化碳检测仪。主要因为PM2.5一直关窗，想要知道下房间氧气到底够不够。</p>
+              <p>这几天在玩嵌入系统Arduino，发现学起来很简单，就打算组个二氧化碳检测仪。主要因为PM2.5一直关窗，想要知道下房间氧气到底够不够，到底要装什么样的新风。</p>
 <!-- more -->
 <h2 id="组装使用材料">组装使用材料：</h2>
 <table>
@@ -239,14 +238,18 @@ void loop()
 <p>显示部分我用的u8g2库。为了增加渲染速度，只能渲染部分区域，所以我开了fullbuffer，结果直接用掉了92%的内存，这么看的话，可能换个库比较好。</p>
 <figure data-type="image" tabindex="3"><img src="https://zjhxyz.github.io/post-images/1601033221026.png" alt="" loading="lazy"></figure>
 <h2 id="结论">结论</h2>
-<p>那么回归本来的问题，一直关窗氧气到底够不够呢？以下是我这个不运动的人，1人1室大约30<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>m</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">m^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>的经验：</p>
+<p>那么回归本来的问题，一直关窗氧气到底够不够呢？以下是我这个不运动的1人，垃圾铝合金窗户的1室，大约30<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>m</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">m^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>的经验：</p>
 <ul>
 <li>关窗大概每30分钟CO<sub>2</sub>上升500ppm，最大会在3000-4000ppm左右（视测试位置）</li>
 <li>窗户开一点缝隙，最大可以稳定在1000左右</li>
 <li>门窗都开一点，可以稳定在500左右（可见南北同时透气很重要）</li>
 </ul>
 <p><em>每10,000ppm相当于1%含量CO<sub>2</sub></em></p>
-<p>那么多少CO<sub>2</sub>对人体有害？这个科学上有争议，有实验发现1200以上会降低认知，但又有键盘打字实验发现5000都不会。生命安全上的医学建议为待在1w以上环境不要超过8小时，所以可以认为一直关窗安全性肯定没问题，有条件最好保持在1000-2000。这么看如果装个新风系统，只要1~2个壁挂式的就行了，还可以避免全屋新风屋顶排管增加复杂度。除非你需要除甲醛，但一般来说选用石塑地板和宜家就没这方面问题了。</p>
+<p>那么多少CO<sub>2</sub>对人体有害？这个科学上有争议，有实验发现1200以上会降低认知，但又有键盘打字实验发现5000都不会。生命安全上的医学建议为待在1w以上环境不要超过8小时，所以可以认为一直关窗安全性肯定没问题，有条件最好保持在1000-2000。</p>
+<p><em>如果家里使用气密性很好的系统窗，很有可能会有危险，等我装修好了测试一下。</em></p>
+<p>**既然窗户开一点缝隙效果就那么明显，那是不是每个房间装一个壁挂式新风系统就行了？**还可以避免全屋新风屋顶排管增加复杂度？简洁的答案是，只考虑氧气的话是可以的。</p>
+<p>全屋新风一般可以每小时全屋换气1-2次，因此他是唯一有效除甲醛的手段，壁挂式是无法替代的，当然甲醛可以通过选用石塑地板和E1板材的家具来事先回避。<br>
+另外全屋新风可以节省空气净化器占用的空间，换算成面积房价的话，可以说还赚了。加上新房选用系统窗后空气基本无法流通，所以新房装修别考虑太多，直接上新风吧。</p>
 
             </div>
             
